@@ -1,8 +1,7 @@
 class Dial:
-
-    def __init__(self, **args):
-        self.lval = lval
-        self.rval = rval
+    def __init__(self, **kwargs):
+        self.lval = kwargs.get('lval')
+        self.rval = kwargs.get('rval')
 
     def values(self): 
         return [self.lval, self.rval]
