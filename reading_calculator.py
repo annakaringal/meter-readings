@@ -14,9 +14,9 @@ def calculate(self):
     for idx, dial in enumerate(dials.reverse()): 
         # dial hand is between numbers
         # go with the lower number unless between 0 and 9:
-        if dial.between_values: 
-            if not dial.between_0_and_9: 
-                val = min(dail.values)
+        if dial.between_values(): 
+            if not dial.between_0_and_9(): 
+                val = min(dial.values())
             else: 
                 val = 9
 
@@ -24,9 +24,12 @@ def calculate(self):
         # if value of dial on right is between 0 and 7, set value to 
         # one less than value
         else:
-            val = dial.values[0]
-            if not idx == len(dials)-1 and reading_vals[-1] >= 7: 
-                    val = dial.values[0] - 1
+            print idx, len(dials)-1, reading_vals[-1] >= 7
+            if idx != len(dials)-1 and reading_vals[-1] >= 7: 
+                print "here"
+                val = dial.values()[0] - 1
+            else:
+                val = dial.values()[0]
 
         reading_vals.append(val);
 

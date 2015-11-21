@@ -10,4 +10,4 @@ class Dial:
         return self.lval != self.rval
 
     def between_0_and_9(self):
-        return (0 in self.values and 9 in self.values)
+        return (0 in self.values() and 9 in self.values())
