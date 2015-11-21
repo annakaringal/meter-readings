@@ -29,6 +29,7 @@ def calculate_reading(dials):
             else:
                 val = dial.values()[0]
 
-        reading_vals.append(val);
+        reading_vals.append(val)
 
-    return ''.join(reading_vals())
+    # join reversed list of individual dial readings and cast to int
+    return int(''.join(str(v) for v in reading_vals[::-1]))
