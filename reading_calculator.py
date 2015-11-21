@@ -7,7 +7,7 @@ http://www.coned.com/customercentral/meter-reading-written.asp
 
 """
 
-def calculate(self): 
+def calculate_reading(dials): 
     reading_vals = []
 
     # read dials from right to left
