@@ -24,9 +24,7 @@ def calculate_reading(dials):
         # if value of dial on right is between 0 and 7, set value to 
         # one less than value
         else:
-            print idx, len(dials)-1, reading_vals[-1] >= 7
-            if idx != len(dials)-1 and reading_vals[-1] >= 7: 
-                print "here"
+            if idx != 0 and reading_vals[-1] >= 7: 
                 val = dial.values()[0] - 1
             else:
                 val = dial.values()[0]
