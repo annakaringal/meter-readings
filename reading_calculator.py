@@ -11,7 +11,7 @@ def calculate_reading(dials):
     reading_vals = []
 
     # read dials from right to left
-    for idx, dial in enumerate(dials.reverse()): 
+    for idx, dial in enumerate(reversed(dials)): 
         # dial hand is between numbers
         # go with the lower number unless between 0 and 9:
         if dial.between_values(): 
