@@ -1,4 +1,4 @@
-import dial
+from dial import Dial
 
 class ReadingCalculator: 
     """
