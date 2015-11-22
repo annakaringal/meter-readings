@@ -32,10 +32,11 @@ class Image:
         min_d = kwargs.get("min_dist", 30)
         min_r = kwargs.get("min_radius", 25)
         max_r = kwargs.get("max_radius", 60)
+        threshold = kwargs.get("threshold", 300)
 
         # Find possible dials
         possible_dials = cv2.HoughCircles(self.gray, cv2.cv.CV_HOUGH_GRADIENT, dp, min_d,
-                        minRadius=min_r, maxRadius=max_r)
+                        param1=threshold, param2=threshold, minRadius=min_r, maxRadius=max_r)
 
         if possible_dials is None:
             return possible_dials
