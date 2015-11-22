@@ -62,9 +62,9 @@ class Image:
 
         # filter out any groups with less than 4 in a row
         rows = []
-        for y_val, circ in groupby(sorted_by_y, key=(lambda (x,y,r): y)):
-            c = list(circ)
-            if len(c) >= 4:
-                rows.append(c)
+        for y_val, row in groupby(sorted_by_y, key=(lambda (x,y,r): y)):
+            r = list(row)
+            if len(r) >= num_dials:
+                rows.append(sorted(r, key=(lambda (x,y,r): x)))
 
         return all_circles
