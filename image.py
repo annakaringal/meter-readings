@@ -74,7 +74,7 @@ class Image:
             for idxr, r in enumerate(rows):
                 radii_data = Counter(map(lambda x: x[2], r))
                 most_common_radius = radii_data.most_common(1)[0][0]
-                max_diff = (most_common_radius + 15) * 2
+                max_diff = (most_common_radius + most_common_radius/2) *2
 
                 # if circle in row is too close to or too far awy from circle
                 # to its right, remove from row
