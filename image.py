@@ -76,13 +76,15 @@ class Image:
                 most_common_radius = radii_data.most_common(1)[0][0]
                 max_diff = (most_common_radius + 15) * 2
 
-                # if circle in row is too far away from circle to its right
-                # remove from row
+                # if circle in row is too close to or too far awy from circle
+                # to its right, remove from row
                 circles_to_remove =[]
                 for idxc, c in enumerate(r):
                     if idxc > 0:
                         diff = abs(r[idxc-1][0] - c[0])
                         if diff > max_diff: 
+                            circles_to_remove.append(c)
+                        if diff < c[2]+5: 
                             circles_to_remove.append(c)
                 r = [c for c in r if c not in circles_to_remove]
 
@@ -93,5 +95,5 @@ class Image:
 
             # remove rows with circles too spread out
             rows =  [r for r in rows if r not in rows_to_remove]
-
+         
         return rows
