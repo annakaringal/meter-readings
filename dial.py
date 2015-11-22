@@ -1,7 +1,9 @@
+from meter_image import MeterImage 
+
 class Dial:
     def __init__(self, **kwargs):
-        self.lval = kwargs.get('lval')
-        self.rval = kwargs.get('rval')
+        self.center = kwargs.get('center',0)
+        self.radius = kwargs.get('radius',0)
 
     def values(self): 
         return [self.lval, self.rval]
