@@ -5,7 +5,11 @@ from collections import Counter
 
 IMG_DIMENSIONS = [640, 480]
 
-class Image: 
+class MeterImage: 
+    """
+    Class that reads an image of a meter from a file and finds the positions and radii of 
+    the dials in the image.
+    """
 
     def __init__(self, **kwargs):
         fname = kwargs.get("image_fname")
@@ -14,6 +18,9 @@ class Image:
             self.gray = self.img.copy()
         else: 
             self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+
+    def image (self): 
+        return self.img
 
     def read_and_resize(self, fname):
         img = cv2.imread(fname)
@@ -44,17 +51,6 @@ class Image:
         else: 
             possible_dials = np.round(possible_dials[0, :]).astype('int')
             dials = self.get_dials(possible_dials, num_dials)
-
-            # Draw dials on copy of image
-            output = self.img.copy()
-            for (x,y,r) in dials: 
-                cv2.circle(output, (x,y), r, (0,255,0), 4)
-                cv2.rectangle(output, (x-5, y-5), (x+5, y+5), (0, 127, 255), -1)
-
-            # Display image in viewer, press any key to exit viewer
-            cv2.imshow('output', np.hstack([self.img, output]))
-            cv2.waitKey(0)
-
         return dials
 
     def get_dials(self, all_circles, num_dials=4): 
