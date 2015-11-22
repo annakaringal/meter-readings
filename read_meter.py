@@ -3,6 +3,8 @@ import numpy as np
 import argparse
 
 from meter_image import MeterImage
+from dial import Dial
+from reading_calculator import calculate_reading
 
 # Add and getcommand line arguments and flags
 ap = argparse.ArgumentParser()
@@ -22,7 +24,14 @@ for (x,y,r) in dial_properties:
     # Draw each dial on output image
     cv2.circle(output, (x,y), r, (0,255,0), 2)
 
+    # Create new Dial instance, determine position of hand
+    # and add to list of dials
+    d = Dial(center=[x,y],radius=r)
+    d.determine_hand_position(meter_img)
+    dials.append(d)
 
+# Calculate and print meter reading to console
+print "Meter Reading: ", calculate_reading(dials)
 
 # Display image in viewer, press any key to exit viewer
 cv2.imshow('output', np.hstack([meter_img.image(), output]))
