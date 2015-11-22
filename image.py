@@ -33,7 +33,7 @@ class Image:
         min_d = kwargs.get("min_dist", 30)
         min_r = kwargs.get("min_radius", 25)
         max_r = kwargs.get("max_radius", 60)
-        threshold = kwargs.get("threshold", 300)
+        threshold = kwargs.get("threshold", 360)
 
         # Find possible dials
         possible_dials = cv2.HoughCircles(self.gray, cv2.cv.CV_HOUGH_GRADIENT, dp, min_d,
@@ -43,7 +43,7 @@ class Image:
             return possible_dials
         else: 
             possible_dials = np.round(possible_dials[0, :]).astype('int')
-            dials = self.get_dials(possible_dials, num_dials)[0]
+            dials = self.get_dials(possible_dials, num_dials)
 
             # Draw dials on copy of image
             output = self.img.copy()
@@ -95,5 +95,5 @@ class Image:
 
             # remove rows with circles too spread out
             rows =  [r for r in rows if r not in rows_to_remove]
-         
-        return rows
+
+        return rows[0]
