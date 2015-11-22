@@ -2,11 +2,41 @@
 
 Takes an image of a Con Edison dial meter and outputs the number reading to give to your Con Edison representative.
 
+### Requirements
+
+- Python 2.7.10
+- NumPy 1.10.1
+- OpenCV 2.4.12
+
+### Setup
+
+Create and activate a new virtualenv: 
+````
+$ virtualenv mr-env
+$ source mr-env/bin/activate
+````
+Install requirements: 
+````
+$ pip install -r requirements.txt
+````
+
+Install OpenCV using Homebrew.
+````
+$ brew install opencv
+````
+(Pick the OpenCV command to install)
+
+Navigate to `mr-env/lib/python2.7/site-packages` and create a symlink to your version of OpenCV's Python modules. The paths may change depending on the location of your Open CV python packages.
+````
+$ ln -s /usr/local/Cellar/opencv/2.4.12/lib/python2.7/site-packages/cv.py cv.py
+$ ln -s /usr/local/Cellar/opencv/2.4.12/lib/python2.7/site-packages/cv2.so cv2.so
+````
+
 ### Usage
 
-In the working directory, run: 
-
+First run your virtualenv, then run the program: 
 ````
+$ source mr-env/bin/activate
 $ python read_meter.py -i sample-data/meter2.jpg -d 5
 ````
 
