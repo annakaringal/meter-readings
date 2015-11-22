@@ -7,8 +7,8 @@ IMG_DIMENSIONS = [640, 480]
 
 class MeterImage: 
     """
-    Class that reads an image of a meter from a file and finds the positions and radii of 
-    the dials in the image.
+    Class that reads an image of a meter from a file and finds the positions
+    and radii of the dials in the image.
     """
 
     def __init__(self, **kwargs):
