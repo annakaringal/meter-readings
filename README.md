@@ -7,10 +7,12 @@ Takes an image of a Con Edison dial meter and outputs the number reading to give
 In the working directory, run: 
 
 ````
-$ python read_meter.py -i sample-data/meter1.jpeg
+$ python read_meter.py -i sample-data/meter2.jpg -d 5
 ````
 
-Use flag `-i` or `--i` to indicate the path of the image. In this case, the path of the image is `sample-data/meter1.jpeg` 
+Use flag `-i` or `--image` to indicate the path of the image. In this case, the path of the image is `sample-data/meter2.jpeg`.
+
+Use flag `--dials` to indicate the number of dials you are looking for in the image. In this case, the number of dials is 5. If no flag is given, defaults to 4.
 
 ### Image specifications and limitations
 
@@ -25,3 +27,8 @@ For accuracy in readings, images must be:
 Examples of good images can be found in the folder `sample-data`. Examples of bad images can be found `sample-data/unsupported`.
 
 Currently only supports meters where dials are in a straight row, and not in an arc.
+
+### TODO: 
+
+- support for meters with dials arranged in an arc
+- refine circle filtering algorithm
