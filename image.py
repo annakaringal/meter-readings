@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from itertools import groupby
+from collections import Counter
 
 IMG_DIMENSIONS = [640, 480]
 
@@ -67,4 +68,30 @@ class Image:
             if len(r) >= num_dials:
                 rows.append(sorted(r, key=(lambda (x,y,r): x)))
 
-        return all_circles
+        # multiple rows found: do more filtering based on x coordinate & radius
+        if len(rows) > 1: 
+            rows_to_remove = []
+            for idxr, r in enumerate(rows):
+                radii_data = Counter(map(lambda x: x[2], r))
+                most_common_radius = radii_data.most_common(1)[0][0]
+                max_diff = (most_common_radius + 15) * 2
+
+                # if circle in row is too far away from circle to its right
+                # remove from row
+                circles_to_remove =[]
+                for idxc, c in enumerate(r):
+                    if idxc > 0:
+                        diff = abs(r[idxc-1][0] - c[0])
+                        if diff > max_diff: 
+                            circles_to_remove.append(c)
+                r = [c for c in r if c not in circles_to_remove]
+
+                # if number of circles in row is less than the number of dials
+                # you're looking for, remove row from list of possible dial rows
+                if len(r) < num_dials: 
+                    rows_to_remove.append(rows[idxr])
+
+            # remove rows with circles too spread out
+            rows =  [r for r in rows if r not in rows_to_remove]
+
+        return rows
