@@ -43,7 +43,7 @@ class Image:
             return possible_dials
         else: 
             possible_dials = np.round(possible_dials[0, :]).astype('int')
-            dials = self.get_dials(possible_dials, num_dials)
+            dials = self.get_dials(possible_dials, num_dials)[0]
 
             # Draw dials on copy of image
             output = self.img.copy()
