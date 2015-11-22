@@ -3,7 +3,6 @@ import numpy as np
 from itertools import groupby
 
 IMG_DIMENSIONS = [640, 480]
-MIN_NUM_DIALS = 4
 
 class Image: 
 
@@ -25,7 +24,10 @@ class Image:
         return cv2.resize(img, (w,l))
 
     def find_dials(self, **kwargs):
-        # Get kwargs
+        # Get kwargs for number of dials to look for
+        num_dials = kwargs.get("num_dials", 4)
+
+        # Get kwargs for Hough Circle Transform. Defaults are calibrated to sample-data image
         dp = kwargs.get("dp", 20)
         min_d = kwargs.get("min_dist", 30)
         min_r = kwargs.get("min_radius", 25)
@@ -39,7 +41,7 @@ class Image:
             return possible_dials
         else: 
             possible_dials = np.round(possible_dials[0, :]).astype('int')
-            dials = self.get_dials(possible_dials)
+            dials = self.get_dials(possible_dials, num_dials)
 
             # Draw dials on copy of image
             output = self.img.copy()
@@ -53,8 +55,8 @@ class Image:
 
         return dials
 
-    def get_dials(self, all_circles): 
-        # dials should be on same y-axis.: group cicles by y axis value
+    def get_dials(self, all_circles, num_dials=4): 
+        # dials should be on same y-axis: sort group cicles by y axis value
         sorted_by_y = sorted(map(lambda x: x.tolist(), all_circles), key=(lambda (x,y,r): y))
 
         # filter out any groups with less than 4 in a row
