@@ -33,7 +33,9 @@ class Image:
         possible_dials = cv2.HoughCircles(self.gray, cv2.cv.CV_HOUGH_GRADIENT, dp, min_d,
                         minRadius=min_r, maxRadius=max_r)
 
-        if possible_dials is not None: 
+        if possible_dials is None:
+            return possible_dials
+        else: 
             possible_dials = np.round(possible_dials[0, :]).astype('int')
             output = self.img.copy()
             for (x,y,r) in possible_dials: 
@@ -43,6 +45,3 @@ class Image:
             print len(possible_dials)
             cv2.imshow('output', np.hstack([self.img, output]))
             cv2.waitKey(0)
-
-        else: 
-            print "No dials found"
