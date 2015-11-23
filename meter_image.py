@@ -19,8 +19,11 @@ class MeterImage:
         else: 
             self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
 
-    def image (self): 
+    def image(self): 
         return self.img
+
+    def gray(self): 
+        return self.gray
 
     def read_and_resize(self, fname):
         img = cv2.imread(fname)
@@ -46,6 +49,7 @@ class MeterImage:
         possible_dials = cv2.HoughCircles(self.gray, cv2.cv.CV_HOUGH_GRADIENT, dp, min_d,
                         param1=threshold, param2=threshold, minRadius=min_r, maxRadius=max_r)
 
+        # Round dial coords & radii to ints and filter to remove non-dial circles
         if possible_dials is None:
             return possible_dials
         else: 
