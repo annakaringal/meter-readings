@@ -15,7 +15,7 @@ cmd_args = vars(ap.parse_args())
 
 # Get image from command line and make a copy for output visuals
 meter_img = MeterImage(image_fname=cmd_args['image'])
-output = meter_img.image().copy()
+output_img = meter_img.image().copy()
 
 # Find positions of dials in image
 dial_properties = meter_img.find_dials(num_dials=int(cmd_args['dials']))
@@ -26,7 +26,7 @@ template = cv2.imread(cmd_args['template'], 0)
 dials = []
 for (x,y,r) in dial_properties: 
     # Draw each dial on output image
-    cv2.circle(output, (x,y), r, (0,255,0), 2)
+    cv2.circle(output_img, (x,y), r, (0,255,0), 2)
 
     # Create new Dial instance, determine position of hand
     # and add to list of dials
@@ -34,8 +34,8 @@ for (x,y,r) in dial_properties:
     dials.append(d)
 
 # Calculate and print meter reading to console
-print "Meter Reading: ", calculate_reading(dials)
+# print "Meter Reading: ", calculate_reading(dials)
 
 # Display image in viewer, press any key to exit viewer
-cv2.imshow('output', np.hstack([meter_img.image(), output]))
+cv2.imshow('found dials', np.hstack([output_img]))
 cv2.waitKey(0)
