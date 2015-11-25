@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import math
 
 from meter_image import MeterImage 
 
@@ -27,6 +28,29 @@ class Dial:
         self.ellipse = cv2.fitEllipse(conts[0])
         (self.xe,self.ye),(self.MA, self.ma), self.orientation = self.ellipse
         return self.orientation - 90
+
+    def draw_ellipse_with_orientation(self, **kwargs):
+        ellipse_color = kwargs.get('ellipse_color', (147,20,255))
+        line_color = kwargs.get('line_color', (0,255,0))
+        line_width = kwargs.get('line_width', 2)
+
+        rows, cols = self.cropped.shape[:2]
+        o_rads = math.radians(self.needle_orientation()) 
+        vx = math.cos(o_rads)
+        vy = math.sin(o_rads)
+        l = int((-self.xe * vy/vx) + self.ye)
+        r = int(((cols - self.xe )* vy/vx)+ self.ye)
+        
+        copy = self.cropped.copy()
+        cv2.ellipse(copy, self.ellipse, ellipse_color,line_width)
+        cv2.line(copy, (cols-1,r),(0,l),line_color,line_width)
+        return copy
+
+    def values(self): 
+        return [self.lval, self.rval]
+
+    def between_values(self):
+        return self.lval != self.rval
 
     def between_0_and_9(self):
         return (0 in self.values() and 9 in self.values())
