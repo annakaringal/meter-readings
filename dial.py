@@ -13,6 +13,8 @@ class Dial:
         self.cropped = self.crop_dial(meter_img)
         self.threshold = self.threshold_img(self.cropped)
 
+        self.calculate_ellipse_of_best_fit()
+
     def crop_dial(self, meter_img):
         x,y = self.center
         r = self.radius * 1.2
@@ -22,11 +24,13 @@ class Dial:
         gray = cv2.cvtColor(img.copy(), cv2.COLOR_BGR2GRAY)
         return cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 19, 2)
 
-    def needle_orientation(self):
+    def calculate_ellipse_of_best_fit(self):
         (contours, _h) = cv2.findContours(self.threshold.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         conts = sorted(contours, key = cv2.contourArea, reverse=True)[:1]
         self.ellipse = cv2.fitEllipse(conts[0])
         (self.xe,self.ye),(self.MA, self.ma), self.orientation = self.ellipse
+
+    def needle_orientation(self):
         return self.orientation - 90
 
     def draw_ellipse_with_orientation(self, **kwargs):
