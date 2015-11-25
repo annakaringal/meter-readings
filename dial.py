@@ -8,17 +8,18 @@ class Dial:
         self.center = kwargs.get('center',0)
         self.radius = kwargs.get('radius',0)
 
-        img = kwargs.get('image')
-        self.img = self.crop_and_threshold(img)
+        meter_img = kwargs.get('image')
+        self.cropped = self.crop_dial(meter_img)
+        self.threshold = self.threshold_img(self.cropped)
 
-    def crop_and_threshold(self, img): 
+    def crop_dial(self, meter_img):
         x,y = self.center
         r = self.radius * 1.2
-        cropped = img.gray.copy()[y-r:y+r, x-r:x+r]
-        return cv2.adaptiveThreshold(cropped, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 19, 2)
+        return meter_img.image().copy()[y-r:y+r, x-r:x+r]
 
-    def values(self): 
-        return [self.lval, self.rval]
+    def threshold_img(self, img): 
+        gray = cv2.cvtColor(img.copy(), cv2.COLOR_BGR2GRAY)
+        return cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 19, 2)
 
     def between_values(self):
         return self.lval != self.rval
