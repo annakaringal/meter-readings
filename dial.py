@@ -40,7 +40,27 @@ class Dial:
     def needle_orientation(self):
         return self.orientation
 
+    def draw_needle_orientation(self, image, **kwargs): 
+        """
+        Draws line of needle orientation onto image
+        """
+        line_color = kwargs.get('line_color', (147,20,255))
+        line_width = kwargs.get('line_width', 2)
+
+        o_rads = math.radians(self.needle_orientation()) 
+        x0, y0 = self.center
+        vx = math.cos(o_rads)
+        vy = math.sin(o_rads)
+        x1 = int(vx * self.radius + x0)
+        y1 = int(vy * self.radius + y0)
+
+        cv2.line(image,(x0,y0),(x1,y1),line_color,line_width)
+
     def draw_ellipse_with_orientation(self, **kwargs):
+        """
+        Returns copy of cropped grayscale image of dial with ellipse of fit 
+        and ellipse orientation line drawn onto it
+        """
         ellipse_color = kwargs.get('ellipse_color', (147,20,255))
         line_color = kwargs.get('line_color', (0,255,0))
         line_width = kwargs.get('line_width', 2)
