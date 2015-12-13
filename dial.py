@@ -13,7 +13,7 @@ class Dial:
         self.cropped = self.crop_dial(meter_img)
         self.threshold = self.threshold_img(self.cropped)
 
-        self.calculate_ellipse_of_best_fit()
+        self.calculate_needle_properties()
 
     def crop_dial(self, meter_img):
         x,y = self.center
@@ -24,10 +24,11 @@ class Dial:
         gray = cv2.cvtColor(img.copy(), cv2.COLOR_BGR2GRAY)
         return cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 19, 2)
 
-    def calculate_ellipse_of_best_fit(self):
+    def calculate_needle_properties(self):
         needle = self.find_needle_object()
         self.ellipse = cv2.fitEllipse(needle)
-        (self.xe,self.ye),(self.MA, self.ma), self.ellipseOrientation = self.ellipse
+        (self.needle_x,self.needle_y),(self.MA, self.ma), self.orientation = self.ellipse
+        self.orientation = self.orientation - 90
 
     def find_needle_object(self):
         (contours, _h) = cv2.findContours(self.threshold.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -35,7 +36,7 @@ class Dial:
         return conts[0]
 
     def needle_orientation(self):
-        return self.ellipseOrientation - 90
+        return self.orientation
 
     def draw_ellipse_with_orientation(self, **kwargs):
         ellipse_color = kwargs.get('ellipse_color', (147,20,255))
@@ -46,8 +47,8 @@ class Dial:
         o_rads = math.radians(self.needle_orientation()) 
         vx = math.cos(o_rads)
         vy = math.sin(o_rads)
-        l = int((-self.xe * vy/vx) + self.ye)
-        r = int(((cols - self.xe )* vy/vx)+ self.ye)
+        l = int((-self.needle_x * vy/vx) + self.needle_y)
+        r = int(((cols - self.needle_x )* vy/vx)+ self.needle_y)
 
         copy = self.cropped.copy()
         cv2.ellipse(copy, self.ellipse, ellipse_color,line_width)
