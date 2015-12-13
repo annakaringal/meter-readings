@@ -31,8 +31,10 @@ class Dial:
         self.orientation = self.orientation - 90
 
     def find_needle_object(self):
-        (contours, _h) = cv2.findContours(self.threshold.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        conts = sorted(contours, key = cv2.contourArea, reverse=True)
+        kernel = np.ones((3,3),np.uint8)
+        erode_boundaries = cv2.erode(self.threshold, kernel, iterations=1)
+        (contours, _h) = cv2.findContours(erode_boundaries, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        conts = sorted(contours, key=cv2.contourArea, reverse=True)
         return conts[0]
 
     def needle_orientation(self):
