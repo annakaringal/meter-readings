@@ -25,13 +25,17 @@ class Dial:
         return cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 19, 2)
 
     def calculate_ellipse_of_best_fit(self):
+        needle = self.find_needle_object()
+        self.ellipse = cv2.fitEllipse(needle)
+        (self.xe,self.ye),(self.MA, self.ma), self.ellipseOrientation = self.ellipse
+
+    def find_needle_object(self):
         (contours, _h) = cv2.findContours(self.threshold.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        conts = sorted(contours, key = cv2.contourArea, reverse=True)[:1]
-        self.ellipse = cv2.fitEllipse(conts[0])
-        (self.xe,self.ye),(self.MA, self.ma), self.orientation = self.ellipse
+        conts = sorted(contours, key = cv2.contourArea, reverse=True)
+        return conts[0]
 
     def needle_orientation(self):
-        return self.orientation - 90
+        return self.ellipseOrientation - 90
 
     def draw_ellipse_with_orientation(self, **kwargs):
         ellipse_color = kwargs.get('ellipse_color', (147,20,255))
@@ -44,7 +48,7 @@ class Dial:
         vy = math.sin(o_rads)
         l = int((-self.xe * vy/vx) + self.ye)
         r = int(((cols - self.xe )* vy/vx)+ self.ye)
-        
+
         copy = self.cropped.copy()
         cv2.ellipse(copy, self.ellipse, ellipse_color,line_width)
         cv2.line(copy, (cols-1,r),(0,l),line_color,line_width)
