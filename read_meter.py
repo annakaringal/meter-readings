@@ -30,7 +30,7 @@ for (x,y,r) in dial_properties:
 
     # Create new Dial instance, determine position of hand, 
     # draw orientation on output image and add to list of dials
-    d = Dial(center=[x,y], radius=r, image=meter_img, dial_template=template)
+    d = Dial(center=(x,y), radius=r, image=meter_img, dial_template=template)
     d.draw_needle_orientation(output_img)
     dials.append(d)
 

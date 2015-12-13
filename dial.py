@@ -47,14 +47,9 @@ class Dial:
         line_color = kwargs.get('line_color', (147,20,255))
         line_width = kwargs.get('line_width', 2)
 
-        o_rads = math.radians(self.needle_orientation()) 
-        x0, y0 = self.center
-        vx = math.cos(o_rads)
-        vy = math.sin(o_rads)
-        x1 = int(vx * self.radius + x0)
-        y1 = int(vy * self.radius + y0)
-
-        cv2.line(image,(x0,y0),(x1,y1),line_color,line_width)
+        endpoint = calculate_line_endpoint(angle=self.needle_orientation()-90,
+                                            center=self.center, length=self.radius)
+        cv2.line(image,self.center,endpoint,line_color,line_width)
 
     def draw_ellipse_with_orientation(self, **kwargs):
         """
@@ -85,3 +80,14 @@ class Dial:
 
     def between_0_and_9(self):
         return (0 in self.values() and 9 in self.values())
+
+def calculate_line_endpoint(**kwargs):
+    angle = kwargs.get('angle', 0)
+    center = kwargs.get('center', (0,0))
+    length = kwargs.get('length', 10)
+
+    rads = math.radians(angle) 
+    x0, y0 = center
+    vx = math.cos(rads)
+    vy = math.sin(rads)
+    return (int(vx * length + x0), int(vy * length + y0))
