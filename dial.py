@@ -47,7 +47,7 @@ class Dial:
         line_color = kwargs.get('line_color', (147,20,255))
         line_width = kwargs.get('line_width', 2)
 
-        endpoint = calculate_line_endpoint(angle=self.needle_orientation()-90,
+        endpoint = point_on_line(angle=self.needle_orientation()-90,
                                             center=self.center, length=self.radius)
         cv2.line(image,self.center,endpoint,line_color,line_width)
 
@@ -81,7 +81,7 @@ class Dial:
     def between_0_and_9(self):
         return (0 in self.values() and 9 in self.values())
 
-def calculate_line_endpoint(**kwargs):
+def point_on_line(**kwargs):
     angle = kwargs.get('angle', 0)
     center = kwargs.get('center', (0,0))
     length = kwargs.get('length', 10)
