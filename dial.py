@@ -27,8 +27,11 @@ class Dial:
     def calculate_needle_properties(self):
         needle = self.find_needle_object()
         self.ellipse = cv2.fitEllipse(needle)
-        (self.needle_x,self.needle_y),(self.MA, self.ma), self.orientation = self.ellipse
-        self.orientation = self.orientation - 90
+        self.needle_center,(self.MA, self.ma), self.orientation = self.ellipse
+
+        p = point_on_line(angle=self.orientation-90, center=self.needle_center, length=self.radius/2)
+        if cv2.pointPolygonTest(needle,p,False) < 0:
+            self.orientation = self.orientation + 180
 
     def find_needle_object(self):
         kernel = np.ones((3,3),np.uint8)
