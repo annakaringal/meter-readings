@@ -3,6 +3,7 @@ import numpy as np
 import math
 
 from meter_image import MeterImage 
+from functions import *
 
 class Dial:
     def __init__(self, **kwargs):
@@ -43,9 +44,14 @@ class Dial:
             self.orientation = self.orientation + 180
 
     def find_needle_object(self):
+        # Erode the boundaries of thresholded cropped image
         kernel = np.ones((3,3),np.uint8)
         erode_boundaries = cv2.erode(self.threshold, kernel, iterations=1)
+
+        # Find contours of all objects
         (contours, _h) = cv2.findContours(erode_boundaries, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Needle is largest object 
         conts = sorted(contours, key=cv2.contourArea, reverse=True)
         return conts[0]
 
@@ -59,8 +65,7 @@ class Dial:
         line_color = kwargs.get('line_color', (147,20,255))
         line_width = kwargs.get('line_width', 2)
 
-        endpoint = point_on_line(angle=self.needle_orientation()-90,
-                                            center=self.center, length=self.radius)
+        endpoint = line_endpoint(self.center, self.needle_orientation()-90, self.radius)
         cv2.line(image,self.center,endpoint,line_color,line_width)
 
     def draw_ellipse_with_orientation(self, **kwargs):
@@ -92,14 +97,3 @@ class Dial:
 
     def between_0_and_9(self):
         return (0 in self.values() and 9 in self.values())
-
-def point_on_line(**kwargs):
-    angle = kwargs.get('angle', 0)
-    center = kwargs.get('center', (0,0))
-    length = kwargs.get('length', 10)
-
-    rads = math.radians(angle) 
-    x0, y0 = center
-    vx = math.cos(rads)
-    vy = math.sin(rads)
-    return (int(vx * length + x0), int(vy * length + y0))
