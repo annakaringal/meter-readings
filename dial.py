@@ -25,12 +25,21 @@ class Dial:
         return cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 19, 2)
 
     def calculate_needle_properties(self):
+        # Find needle object by fitting ellipse to largest object in cropped image
         needle = self.find_needle_object()
         self.ellipse = cv2.fitEllipse(needle)
         self.needle_center,(self.MA, self.ma), self.orientation = self.ellipse
 
-        p = point_on_line(angle=self.orientation-90, center=self.needle_center, length=self.radius/2)
-        if cv2.pointPolygonTest(needle,p,False) < 0:
+        # Calculate vector between dial center & needle center
+        dial_center = tuple(map(lambda x: x/2, self.cropped.shape[:2]))
+        dial_center_to_needle_center = vector(dial_center, self.needle_center)
+
+        # Calculate vecotr between dial center and point on line
+        point_on_line = line_endpoint(dial_center, self.orientation-90, self.radius)
+        dial_center_to_point_on_line = vector(dial_center, point_on_line)
+
+        # If dot product of two vectors is -1, recalculate needle  orientaiton
+        if dot_product(dial_center_to_needle_center, dial_center_to_point_on_line) < 0:
             self.orientation = self.orientation + 180
 
     def find_needle_object(self):
