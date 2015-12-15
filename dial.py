@@ -14,6 +14,7 @@ class Dial:
     def __init__(self, **kwargs):
         self.center = kwargs.get('center',0)
         self.radius = kwargs.get('radius',0)
+        self.clockwise = kwargs.get('clockwise')
 
         meter_img = kwargs.get('image')
         self.cropped = self.crop_dial(meter_img)
