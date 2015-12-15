@@ -28,9 +28,10 @@ for (x,y,r) in dial_properties:
     # Draw each dial on output image
     cv2.circle(output_img, (x,y), r, (0,255,0), 2)
 
-    # Create new Dial instance, determine position of hand
-    # and add to list of dials
-    d = Dial(center=[x,y], radius=r, image=meter_img, dial_template=template)
+    # Create new Dial instance, determine position of hand, 
+    # draw orientation on output image and add to list of dials
+    d = Dial(center=(x,y), radius=r, image=meter_img, dial_template=template)
+    d.draw_needle_orientation(output_img)
     dials.append(d)
 
 # Calculate and print meter reading to console
