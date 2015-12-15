@@ -6,6 +6,11 @@ from meter_image import MeterImage
 from functions import *
 
 class Dial:
+    """
+    Class that, given the image, center and radius of a dial, calculates the 
+    orientaiton and value readings of that dial
+    """
+    
     def __init__(self, **kwargs):
         self.center = kwargs.get('center',0)
         self.radius = kwargs.get('radius',0)
@@ -26,10 +31,14 @@ class Dial:
         return cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 19, 2)
 
     def calculate_needle_properties(self):
+        """
+        Calculates and sets the center and orientaiton of the needle
+        """
+
         # Find needle object by fitting ellipse to largest object in cropped image
         needle = self.find_needle_object()
         self.ellipse = cv2.fitEllipse(needle)
-        self.needle_center,(self.MA, self.ma), self.orientation = self.ellipse
+        self.needle_center, _axes, self.orientation = self.ellipse
 
         # Calculate vector between dial center & needle center
         dial_center = tuple(map(lambda x: x/2, self.cropped.shape[:2]))
@@ -44,6 +53,9 @@ class Dial:
             self.orientation = self.orientation + 180
 
     def find_needle_object(self):
+        """
+        Returns contours of the needle object
+        """
         # Erode the boundaries of thresholded cropped image
         kernel = np.ones((3,3),np.uint8)
         erode_boundaries = cv2.erode(self.threshold, kernel, iterations=1)
