@@ -71,22 +71,17 @@ class Dial:
     def draw_ellipse_with_orientation(self, **kwargs):
         """
         Returns copy of cropped grayscale image of dial with ellipse of fit 
-        and ellipse orientation line drawn onto it
+        and ellipse orientation line drawn from ellipse center
         """
         ellipse_color = kwargs.get('ellipse_color', (147,20,255))
         line_color = kwargs.get('line_color', (0,255,0))
         line_width = kwargs.get('line_width', 2)
 
-        rows, cols = self.cropped.shape[:2]
-        o_rads = math.radians(self.needle_orientation()) 
-        vx = math.cos(o_rads)
-        vy = math.sin(o_rads)
-        l = int((-self.needle_x * vy/vx) + self.needle_y)
-        r = int(((cols - self.needle_x )* vy/vx)+ self.needle_y)
+        endpoint = line_endpoint(self.needle_center, self.needle_orientation()-90, self.radius)
 
         copy = self.cropped.copy()
         cv2.ellipse(copy, self.ellipse, ellipse_color,line_width)
-        cv2.line(copy, (cols-1,r),(0,l),line_color,line_width)
+        cv2.line(copy, self.needle_center, endpoint,line_color,line_width)
         return copy
 
     def values(self): 
