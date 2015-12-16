@@ -5,6 +5,9 @@ import math
 from meter_image import MeterImage 
 from functions import *
 
+NUM_OF_VALS = 10
+TOT_DEGS = 360
+
 class Dial:
     """
     Class that, given the image, center and radius of a dial, calculates the 
@@ -97,6 +100,30 @@ class Dial:
         cv2.ellipse(copy, self.ellipse, ellipse_color,line_width)
         cv2.line(copy, self.needle_center, endpoint,line_color,line_width)
         return copy
+
+    def calculate_needle_values(self):
+        value_positions = self.generate_value_positions()
+        closest_pos = min(range(len(value_positions)), key=lambda p: abs(value_positions[p]-self.orientation))
+        if closest_pos % 2 == 1: 
+            pos = closest_pos / 2
+            self.lval = pos
+            self.rval = pos + 1
+        else:
+            self.lval = closest_pos / 2
+            self.rval = self.lval
+
+        if self.rval == NUM_OF_VALS: 
+            self.rval = 0
+        if self.lval == NUM_OF_VALS: 
+            self.lval = 0
+
+    def generate_value_positions(self):
+        incr = TOT_DEGS / (NUM_OF_VALS * 2)
+        val_pos = range(0, TOT_DEGS, incr)
+        if self.clockwise:
+            val_pos.reverse()
+            val_pos = [val_pos[-1]] + val_pos[:-1]
+        return val_pos
 
     def values(self): 
         return [self.lval, self.rval]
