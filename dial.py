@@ -14,13 +14,14 @@ class Dial:
     def __init__(self, **kwargs):
         self.center = kwargs.get('center',0)
         self.radius = kwargs.get('radius',0)
-        self.clockwise = kwargs.get('clockwise')
+        self.clockwise = kwargs.get('clockwise', True)
 
         meter_img = kwargs.get('image')
         self.cropped = self.crop_dial(meter_img)
         self.threshold = self.threshold_img(self.cropped)
 
         self.calculate_needle_properties()
+        self.calculate_needle_values()
 
     def crop_dial(self, meter_img):
         x,y = self.center
