@@ -38,8 +38,11 @@ for (x,y,r) in dial_properties:
     d.draw_needle_orientation(output_img)
     dials.append(d)
 
+# Re-order dials from L to R
+dials.reverse()
+
 # Calculate and print meter reading to console
-# print "Meter Reading: ", calculate_reading(dials)
+print "Meter Reading: ", calculate_reading(dials)
 
 # Display image in viewer, press any key to exit viewer
 cv2.imshow('found dials', np.hstack([output_img]))
