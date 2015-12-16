@@ -126,7 +126,7 @@ class Dial:
         return val_pos
 
     def values(self): 
-        return [self.lval, self.rval]
+        return (self.lval, self.rval)
 
     def between_values(self):
         return self.lval != self.rval
