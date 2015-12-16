@@ -66,7 +66,7 @@ class MeterImage:
         for y_val, row in groupby(sorted_by_y, key=(lambda (x,y,r): y)):
             r = list(row)
             if len(r) >= num_dials:
-                rows.append(sorted(r, key=(lambda (x,y,r): x)))
+                rows.append(sorted(r, key=(lambda (x,y,r): x), reverse=True))
 
         # multiple rows found: do more filtering based on x coordinate & radius
         if len(rows) > 1: 

@@ -5,6 +5,9 @@ import math
 from meter_image import MeterImage 
 from functions import *
 
+NUM_OF_VALS = 10
+TOT_DEGS = 360
+
 class Dial:
     """
     Class that, given the image, center and radius of a dial, calculates the 
@@ -14,12 +17,14 @@ class Dial:
     def __init__(self, **kwargs):
         self.center = kwargs.get('center',0)
         self.radius = kwargs.get('radius',0)
+        self.clockwise = kwargs.get('clockwise', True)
 
         meter_img = kwargs.get('image')
         self.cropped = self.crop_dial(meter_img)
         self.threshold = self.threshold_img(self.cropped)
 
         self.calculate_needle_properties()
+        self.calculate_needle_values()
 
     def crop_dial(self, meter_img):
         x,y = self.center
@@ -96,8 +101,32 @@ class Dial:
         cv2.line(copy, self.needle_center, endpoint,line_color,line_width)
         return copy
 
+    def calculate_needle_values(self):
+        value_positions = self.generate_value_positions()
+        closest_pos = min(range(len(value_positions)), key=lambda p: abs(value_positions[p]-self.orientation))
+        if closest_pos % 2 == 1: 
+            pos = closest_pos / 2
+            self.lval = pos
+            self.rval = pos + 1
+        else:
+            self.lval = closest_pos / 2
+            self.rval = self.lval
+
+        if self.rval == NUM_OF_VALS: 
+            self.rval = 0
+        if self.lval == NUM_OF_VALS: 
+            self.lval = 0
+
+    def generate_value_positions(self):
+        incr = TOT_DEGS / (NUM_OF_VALS * 2)
+        val_pos = range(0, TOT_DEGS, incr)
+        if self.clockwise:
+            val_pos.reverse()
+            val_pos = [val_pos[-1]] + val_pos[:-1]
+        return val_pos
+
     def values(self): 
-        return [self.lval, self.rval]
+        return (self.lval, self.rval)
 
     def between_values(self):
         return self.lval != self.rval

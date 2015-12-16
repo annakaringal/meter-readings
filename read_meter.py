@@ -28,14 +28,21 @@ for (x,y,r) in dial_properties:
     # Draw each dial on output image
     cv2.circle(output_img, (x,y), r, (0,255,0), 2)
 
+    # Rightmost dial (dials[0]) is clockwise, then 
+    # alternates clockwise and anti-clockwise
+    dial_clockwise = (len(dials) % 2 == 1)
+
     # Create new Dial instance, determine position of hand, 
     # draw orientation on output image and add to list of dials
-    d = Dial(center=(x,y), radius=r, image=meter_img, dial_template=template)
+    d = Dial(center=(x,y), radius=r, image=meter_img, dial_template=template, clockwise=dial_clockwise)
     d.draw_needle_orientation(output_img)
     dials.append(d)
 
+# Re-order dials from L to R
+dials.reverse()
+
 # Calculate and print meter reading to console
-# print "Meter Reading: ", calculate_reading(dials)
+print "Meter Reading: ", calculate_reading(dials)
 
 # Display image in viewer, press any key to exit viewer
 cv2.imshow('found dials', np.hstack([output_img]))
