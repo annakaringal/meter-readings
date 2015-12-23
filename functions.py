@@ -1,5 +1,9 @@
 import math
 
+"""
+Module that contains helper functions for lines, matrices and vectors
+"""
+
 def line_endpoint(start, angle, length ):
     """ Returns point at end of line with characteristics of given params """
     rads = math.radians(angle) 

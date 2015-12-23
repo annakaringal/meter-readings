@@ -4,7 +4,6 @@ from dial import Dial
 Module that takes in the position information of four dials and calculates
 the resulting ConEd reading using the dial reading information guide:
 http://www.coned.com/customercentral/meter-reading-written.asp
-
 """
 
 def calculate_reading(dials): 
