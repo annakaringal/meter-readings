@@ -91,3 +91,4 @@ test*
 mr-env/*
 output/*
 README.txt
+*.zip
