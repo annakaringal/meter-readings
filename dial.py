@@ -39,7 +39,6 @@ class Dial:
         """
         Calculates and sets the center and orientaiton of the needle
         """
-
         # Find needle object by fitting ellipse to largest object in cropped image
         needle = self.find_needle_object()
         self.ellipse = cv2.fitEllipse(needle)
@@ -102,6 +101,9 @@ class Dial:
         return copy
 
     def calculate_needle_values(self):
+        """
+        Calculates needle values based on needle orientaiton
+        """
         value_positions = self.generate_value_positions()
         closest_pos = min(range(len(value_positions)), key=lambda p: abs(value_positions[p]-self.orientation))
         if closest_pos % 2 == 1: 
@@ -118,6 +120,10 @@ class Dial:
             self.lval = 0
 
     def generate_value_positions(self):
+        """
+        Returns list of degrees that correspond to their needle value (the index in list)
+        depending on the number of values the dial possesses (values start at 0)
+        """
         incr = TOT_DEGS / (NUM_OF_VALS * 2)
         val_pos = range(0, TOT_DEGS, incr)
         if self.clockwise:
