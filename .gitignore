@@ -1,5 +1,3 @@
-# Created by https://www.gitignore.io/api/python,osx
-
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -91,3 +89,4 @@ Temporary Items
 # Project specific
 test*
 mr-env/*
+output/*
